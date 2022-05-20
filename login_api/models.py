@@ -10,3 +10,5 @@ class User(AbstractUser):
     major = models.CharField(max_length=20)
     first_name = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=20)
+
+    REQUIRED_FIELDS = []

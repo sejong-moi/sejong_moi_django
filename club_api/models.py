@@ -10,7 +10,7 @@ class Category(models.Model):
         return self.category
 
 class Club(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
     introduce = models.TextField()
     club_logo_url = models.URLField()
     category = models.ManyToManyField(Category)

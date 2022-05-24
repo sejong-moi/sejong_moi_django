@@ -8,7 +8,7 @@ from .models import User
 from .sj_auth import uis_api
 
 class LoginView(APIView):
-    def post(selfself, request):
+    def post(self, request):
         username = request.data['username']
         password = request.data['password']
 
@@ -43,7 +43,6 @@ class LoginView(APIView):
         response.data = {
             'jwt': token
         }
-
         return response
 
 class UserView(APIView):
@@ -60,7 +59,9 @@ class UserView(APIView):
 
         user = User.objects.filter(id = payload['id']).first()
         serializer = UserSerializer(user)
-        return Response(serializer.data)
+        response = Response(data=serializer.data)
+        print(response.headers)
+        return response
 
 class LogoutView(APIView):
     def post(self, request):

@@ -15,7 +15,15 @@ def club(request, name):
     if request.method == 'GET':
         club = Club.objects.get(name=name)
         serializers = ClubSerializer(club)
-        return Response(serializers.data)
+        interested = serializers.data['interested']
+        interested_username = []
+        for id in interested:
+            interested_username.append(User.objects.get(id=id).username)
+        print(interested_username)
+        response = Response(data=serializers.data)
+        response.data['interested_username'] = interested_username
+
+        return response
 
 
 @api_view(['GET'])
@@ -88,17 +96,27 @@ def register_club(request):
         return response
 
 
-@api_view(['POST'])
-def is_interested(request):
-    if request.method == 'POST':
-        username = json.loads(request.body)['username']
-        club_name = json.loads(request.body)['club_name']
-        club_obj = Club.objects.get(name=club_name)
-        print(club_obj.interested.filter(username=username))
-        if club_obj.interested.filter(username=username):
-            return Response(data={'interested': 'True'})
-        else:
-            return Response(data={'interested': 'False'})
+# @api_view(['POST'])
+# def is_interested(request):
+#     if request.method == 'POST':
+#         dict_req = dict(json.loads(request.body))
+#         print(dict_req)
+#         # print(dict_req['username'])
+#         # print(dict_req['club_name'])
+#         # try:
+#         username = dict_req['username']
+#         # except TypeError:
+#         #     print("username")
+#
+#         # try:
+#         club_name = dict_req['club_name']
+#         # except TypeError:
+#         #     print("club_name")
+#         club_obj = Club.objects.get(name=club_name)
+#         if club_obj.interested.filter(username=username):
+#             return Response(data={'interested': 'True'})
+#         else:
+#             return Response(data={'interested': 'False'})
 
 
 @api_view(['POST'])

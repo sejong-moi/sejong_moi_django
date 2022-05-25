@@ -139,4 +139,4 @@ CORS_ORIGIN_WHITELIST = ( "http://localhost:3000", )
 
 # CORS 허용 여부 True 를 하게되면 누구든 접근이 허용된다.
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIAL = True
+CORS_ALLOW_CREDENTIALS = True

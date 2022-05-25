@@ -1,4 +1,6 @@
 import json
+from http.client import HTTPResponse
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
@@ -38,8 +40,7 @@ class LoginView(APIView):
         token = jwt.encode(payload, 'secret', algorithm='HS256')
 
         response = Response()
-
-        response.set_cookie(key='jwt', value=token, httponly=True)
+        response.set_cookie(key='jwt', value=token, httponly=True, samesite=None)
         response.data = {
             'jwt': token
         }
@@ -48,7 +49,6 @@ class LoginView(APIView):
 class UserView(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
-
         if not token:
             raise AuthenticationFailed('Unauthenticatied!')
 
@@ -60,7 +60,7 @@ class UserView(APIView):
         user = User.objects.filter(id = payload['id']).first()
         serializer = UserSerializer(user)
         response = Response(data=serializer.data)
-        print(response.headers)
+        response['Access-Controll-Allow-Origin'] = ['*']
         return response
 
 class LogoutView(APIView):

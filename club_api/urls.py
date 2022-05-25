@@ -1,7 +1,7 @@
 
 from django.urls import path
-
-
+from django.conf import settings
+from django.conf.urls.static import static
 from .views import *
 
 app_name = "login_api"
@@ -16,4 +16,9 @@ urlpatterns = [
     path('list_athletic', list_athletic, name='list_athletic'),
     path('list_academic', list_academic, name='list_academic'),
     path('register', register_club),
+    path('is_interested', is_interested),
+    path('add_interested', add_interested),
+    path('del_interested', del_interested),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

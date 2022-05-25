@@ -1,8 +1,12 @@
+import json
+
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Club, Category
+from login_api.models import User, Interesting_Club
 from .serializers import ClubSerializer
+
 
 # Create your views here.
 
@@ -82,3 +86,38 @@ def register_club(request):
         serializer.save()
         response.data = serializer.data
         return response
+
+
+@api_view(['POST'])
+def is_interested(request):
+    if request.method == 'POST':
+        username = json.loads(request.body)['username']
+        club_name = json.loads(request.body)['club_name']
+        club_obj = Club.objects.get(name=club_name)
+        print(club_obj.interested.filter(username=username))
+        if club_obj.interested.filter(username=username):
+            return Response(data={'interested': 'True'})
+        else:
+            return Response(data={'interested': 'False'})
+
+
+@api_view(['POST'])
+def add_interested(request):
+    if request.method == 'POST':
+        username = json.loads(request.body)['username']
+        club_name = json.loads(request.body)['club_name']
+        club_obj = Club.objects.get(name=club_name)
+        club_obj.interested.add(User.objects.filter(username=username).first())
+        # interesting_club = User.objects.filter(username=username).first().interesting
+        # interesting_club.add(club_name)
+        return Response(data={'result': 'added'})
+
+
+@api_view(['POST'])
+def del_interested(request):
+    if request.method == 'POST':
+        username = json.loads(request.body)['username']
+        club_name = json.loads(request.body)['club_name']
+        club_obj = Club.objects.get(name=club_name)
+        club_obj.interested.remove(User.objects.filter(username=username).first())
+        return Response(data={'result': 'deleted'})

@@ -1,9 +1,8 @@
 import json
 
 from rest_framework.decorators import api_view
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Club, Category
+from .models import Club, Category, Interesting
 from login_api.models import User
 from .serializers import ClubSerializer
 
@@ -95,47 +94,27 @@ def register_club(request):
         response.data = serializer.data
         return response
 
-
-# @api_view(['POST'])
-# def is_interested(request):
-#     if request.method == 'POST':
-#         dict_req = dict(json.loads(request.body))
-#         print(dict_req)
-#         # print(dict_req['username'])
-#         # print(dict_req['club_name'])
-#         # try:
-#         username = dict_req['username']
-#         # except TypeError:
-#         #     print("username")
-#
-#         # try:
-#         club_name = dict_req['club_name']
-#         # except TypeError:
-#         #     print("club_name")
-#         club_obj = Club.objects.get(name=club_name)
-#         if club_obj.interested.filter(username=username):
-#             return Response(data={'interested': 'True'})
-#         else:
-#             return Response(data={'interested': 'False'})
-
-
+# 관심 동아리 추가
 @api_view(['POST'])
 def add_interested(request):
     if request.method == 'POST':
+        print(json.loads(request.body)) #
         username = json.loads(request.body)['username']
         club_name = json.loads(request.body)['club_name']
-        club_obj = Club.objects.get(name=club_name)
-        club_obj.interested.add(User.objects.filter(username=username).first())
-        # interesting_club = User.objects.filter(username=username).first().interesting
-        # interesting_club.add(club_name)
+        interesting = Interesting.objects.get(username=username)
+        club = Club.objects.get(name=club_name)
+        interesting.clubs.add(club)
         return Response(data={'result': 'added'})
 
 
+# 관심 동아리 삭제
 @api_view(['POST'])
 def del_interested(request):
     if request.method == 'POST':
+        print(json.loads(request.body)) #
         username = json.loads(request.body)['username']
         club_name = json.loads(request.body)['club_name']
-        club_obj = Club.objects.get(name=club_name)
-        club_obj.interested.remove(User.objects.filter(username=username).first())
+        interesting = Interesting.objects.get(username=username)
+        club = Club.objects.get(name=club_name)
+        interesting.clubs.remove(club)
         return Response(data={'result': 'deleted'})

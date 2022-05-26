@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer
+from club_api.models import Interesting
 import jwt, datetime
 from .models import User
 from .sj_auth import uis_api
@@ -27,6 +28,9 @@ class LoginView(APIView):
             user.major = user_info["major"]
             user.phone_number = user_info["phone_number"]
             user.save()
+            interesting = Interesting.objects.create()
+            interesting.username = username
+            interesting.save()
 
         if not user.check_password(password):
             raise AuthenticationFailed('Incorrect password!')
@@ -40,6 +44,7 @@ class LoginView(APIView):
         token = jwt.encode(payload, 'secret', algorithm='HS256')
 
         response = Response()
+        response.set_cookie(key='jwt', value=token)
         response.data = {
             'jwt': token
         }
@@ -59,7 +64,15 @@ class UserView(APIView):
         user = User.objects.filter(id = payload['id']).first()
         serializer = UserSerializer(user)
         response = Response(data=serializer.data)
+        interesting = []
+        print(Interesting.objects.get(username=response.data['username']).clubs.all())
+        for i in Interesting.objects.get(username=response.data['username']).clubs.all():
+            interesting.append(i.name)
+        response.data['interesting'] = interesting
+
+
         response['Access-Controll-Allow-Origin'] = ['*']
+
         return response
 
 class LogoutView(APIView):

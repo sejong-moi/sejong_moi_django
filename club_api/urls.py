@@ -15,7 +15,7 @@ urlpatterns = [
     path('list_athletic', list_athletic, name='list_athletic'),
     path('list_academic', list_academic, name='list_academic'),
     path('register', register_club),
-    path('is_interested', is_interested),
+    # path('is_interested', is_interested),
     path('add_interested', add_interested),
     path('del_interested', del_interested),
 ]

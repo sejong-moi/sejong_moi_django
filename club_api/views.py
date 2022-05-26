@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Club, Category, Interesting
 from login_api.models import User
-from .serializers import ClubSerializer
+from .serializers import ClubSerializer, AskQuestionSerializer,AnswerQuestionSerializer , QnASerializer
 
 
 # Create your views here.
@@ -29,6 +29,14 @@ def club(request, name):
 def list(request):
     if request.method == 'GET':
         queryset = Club.objects.all()
+        serializers = ClubSerializer(queryset, many=True)
+        return Response(serializers.data)
+
+# 랭킹
+@api_view(['GET'])
+def list_ranking(request):
+    if request.method == 'GET':
+        queryset = Club.objects.order_by('name')[:5]
         serializers = ClubSerializer(queryset, many=True)
         return Response(serializers.data)
 
@@ -118,3 +126,42 @@ def del_interested(request):
         club = Club.objects.get(name=club_name)
         interesting.clubs.remove(club)
         return Response(data={'result': 'deleted'})
+
+
+# 질문 등록
+@api_view(['POST'])
+def ask_question(request):
+    if request.method == "POST":
+        serializer = AskQuestionSerializer(data=request.data)
+        response = Response()
+        if not serializer.is_valid():
+            response.data = {'result': 'Fail'}
+            return response
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        response.data = serializer.data
+        return response
+
+# 답변등록
+@api_view(['POST'])
+def answer_question(request):
+    if request.method == "POST":
+        serializer = AnswerQuestionSerializer(data=request.data)
+        response = Response()
+        if not serializer.is_valid():
+            response.data = {'result': 'Fail'}
+            return response
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        response.data = serializer.data
+        return response
+
+
+# 질문 답변 출력
+@api_view(['POST'])
+def get_qna(request):
+    if request.method == 'POST':
+        print(request.body)
+        # queryset = set(Club.objects.filter(category__club__category='4'))
+        # serializers = ClubSerializer(queryset, many=True)
+        return Response("serializers.data")

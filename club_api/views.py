@@ -118,6 +118,7 @@ def add_interested(request):
         club = Club.objects.get(name=club_name)
         interesting.clubs.add(club)
         club.like += 1
+        club.save()
         return Response(data={'result': 'added'})
 
 
@@ -132,6 +133,7 @@ def del_interested(request):
         club = Club.objects.get(name=club_name)
         interesting.clubs.remove(club)
         club.like -= 1
+        club.save()
         return Response(data={'result': 'deleted'})
 
 

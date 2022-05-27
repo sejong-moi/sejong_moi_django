@@ -38,7 +38,7 @@ class Club(models.Model):
 
 class Interesting(models.Model):    # 학번 -> 관심 동아리 목록들
     username = models.CharField(max_length=20)
-    clubs = models.ManyToManyField(Club)
+    clubs = models.ManyToManyField(Club, blank=True)
 
     def __str__(self):
         return self.username

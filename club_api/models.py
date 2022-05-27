@@ -10,13 +10,14 @@ class Category(models.Model):
         return self.category
 
 class QnA(models.Model):
+    club_name = models.CharField(max_length=20)
     question = models.TextField()
     questioner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questioner')
-    answer = models.TextField(null=True)
-    answerer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='answerer', null=True)
+    answer = models.TextField(blank=True)
+    answerer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='answerer', blank=True)
 
     def __str__(self):
-        return self.question
+        return str(self.id)
 
 class Club(models.Model):
     name = models.CharField(max_length=20, unique=True)
@@ -24,10 +25,12 @@ class Club(models.Model):
     introduce_long = models.TextField()
     club_logo_url = models.URLField()
     category = models.ManyToManyField(Category)
-    president_name = models.CharField(max_length=20)
-    president_phone_number = models.CharField(max_length=20)
-    member = models.ManyToManyField(User, related_name='member')
-    interested = models.ManyToManyField(User, related_name='interested')
+    president_name = models.CharField(max_length=20, blank=True)
+    president_phone_number = models.CharField(max_length=20, blank=True)
+    member = models.ManyToManyField(User, related_name='member', blank=True)
+    # interested = models.ManyToManyField(User, related_name='qna')
+    like = models.IntegerField()
+    qna = models.ManyToManyField(QnA, related_name='qna', blank=True)
 
     def __str__(self):
         return self.name

@@ -2,7 +2,7 @@ import json
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Club, Category, Interesting
+from .models import Club, Category, Interesting, QnA
 from login_api.models import User
 from .serializers import ClubSerializer, AskQuestionSerializer,AnswerQuestionSerializer , QnASerializer
 
@@ -14,13 +14,13 @@ def club(request, name):
     if request.method == 'GET':
         club = Club.objects.get(name=name)
         serializers = ClubSerializer(club)
-        interested = serializers.data['interested']
-        interested_username = []
-        for id in interested:
-            interested_username.append(User.objects.get(id=id).username)
-        print(interested_username)
+        # interested = serializers.data['interested']
+        # interested_username = []
+        # for id in interested:
+        #     interested_username.append(User.objects.get(id=id).username)
+        # print(interested_username)
         response = Response(data=serializers.data)
-        response.data['interested_username'] = interested_username
+        # response.data['interested_username'] = interested_username
 
         return response
 
@@ -36,9 +36,14 @@ def list(request):
 @api_view(['GET'])
 def list_ranking(request):
     if request.method == 'GET':
+        category = {1: 'show', 2: 'culture', 3: 'voluteer', 4: 'religion', 5: 'religion', 6: 'athletic', 7: 'academic'}
         queryset = Club.objects.order_by('name')[:5]
         serializers = ClubSerializer(queryset, many=True)
-        return Response(serializers.data)
+        response = Response(data=serializers.data)
+        for i in range(len(response.data)):
+            response.data[i]['category_eng'] = category[response.data[i]['category'][0]]
+            response.data[i]['category_kor'] = str(Category.objects.get(id=response.data[i]['category'][0]))
+        return response
 
 # 공연
 @api_view(['GET'])
@@ -112,6 +117,7 @@ def add_interested(request):
         interesting = Interesting.objects.get(username=username)
         club = Club.objects.get(name=club_name)
         interesting.clubs.add(club)
+        club.like += 1
         return Response(data={'result': 'added'})
 
 
@@ -125,6 +131,7 @@ def del_interested(request):
         interesting = Interesting.objects.get(username=username)
         club = Club.objects.get(name=club_name)
         interesting.clubs.remove(club)
+        club.like -= 1
         return Response(data={'result': 'deleted'})
 
 
@@ -158,10 +165,10 @@ def answer_question(request):
 
 
 # 질문 답변 출력
-@api_view(['POST'])
+@api_view(['GET'])
 def get_qna(request):
-    if request.method == 'POST':
-        print(request.body)
-        # queryset = set(Club.objects.filter(category__club__category='4'))
-        # serializers = ClubSerializer(queryset, many=True)
-        return Response("serializers.data")
+    if request.method == 'GET':
+        print(request.GET['club'])
+        queryset = set(QnA.objects.filter(club_name=request.GET['club']))
+        serializers = QnASerializer(queryset, many=True)
+        return Response(serializers.data)

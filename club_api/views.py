@@ -2,9 +2,9 @@ import json
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Club, Category, Interesting, QnA
+from .models import Club, Category, Interesting, Question, Answer
 from login_api.models import User
-from .serializers import ClubSerializer, AskQuestionSerializer,AnswerQuestionSerializer , QnASerializer
+from .serializers import ClubSerializer, QuestionSerializer, AnswerSerializer
 
 
 # Create your views here.
@@ -141,11 +141,13 @@ def del_interested(request):
 @api_view(['POST'])
 def ask_question(request):
     if request.method == "POST":
-        serializer = AskQuestionSerializer(data=request.data)
+        serializer = QuestionSerializer(data=request.data)
+        print(serializer)
         response = Response()
         if not serializer.is_valid():
             response.data = {'result': 'Fail'}
             return response
+
         serializer.is_valid(raise_exception=True)
         serializer.save()
         response.data = serializer.data
@@ -155,13 +157,18 @@ def ask_question(request):
 @api_view(['POST'])
 def answer_question(request):
     if request.method == "POST":
-        serializer = AnswerQuestionSerializer(data=request.data)
+        serializer = AnswerSerializer(data=request.data)
         response = Response()
         if not serializer.is_valid():
             response.data = {'result': 'Fail'}
             return response
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        question_id = serializer.validated_data['question_id']
+        print(Question.objects.get(id=int(question_id)))
+        question = Question.objects.get(id=int(question_id))
+        question.answers = Answer.objects.order_by('-id').first()
+        question.save()
         response.data = serializer.data
         return response
 

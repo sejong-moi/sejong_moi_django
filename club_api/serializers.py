@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Club, QnA
+from .models import Club, Question, Answer
 
 class ClubSerializer(serializers.ModelSerializer):
     class Meta:
@@ -7,21 +7,15 @@ class ClubSerializer(serializers.ModelSerializer):
         fields = ['name', 'introduce', 'club_logo_url', 'category', 'president_name', 'president_phone_number']
 
 
-class AskQuestionSerializer(serializers.ModelSerializer):
+class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = QnA
-        fields = ['question', 'questioner']
+        model = Question
+        fields = ['club_name', 'question_text', 'questioner']
 
 
-class AnswerQuestionSerializer(serializers.ModelSerializer):
+class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = QnA
-        fields = ['question', 'questioner']
-
-
-class QnASerializer(serializers.ModelSerializer):
-    class Meta:
-        model = QnA
-        fields = ['question', 'questioner', 'answer', 'answerer']
+        model = Answer
+        fields = ['question_id', 'answer_text', 'answerer']
 
 

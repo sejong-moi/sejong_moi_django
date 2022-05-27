@@ -37,7 +37,7 @@ def list(request):
 def list_ranking(request):
     if request.method == 'GET':
         category = {1: 'show', 2: 'culture', 3: 'voluteer', 4: 'religion', 5: 'religion', 6: 'athletic', 7: 'academic'}
-        queryset = Club.objects.order_by('name')[:5]
+        queryset = Club.objects.order_by('-like')[:5]
         serializers = ClubSerializer(queryset, many=True)
         response = Response(data=serializers.data)
         for i in range(len(response.data)):

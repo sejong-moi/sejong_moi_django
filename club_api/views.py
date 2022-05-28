@@ -26,7 +26,15 @@ def club(request, name):
             question['club_name'] = question_object.club_name
             question['question_text'] = question_object.question_text
             question['questioner'] = question_object.questioner.id
-            question['answers'] = question_object.answers.id
+            # question['answers'] = question_object.answers.id
+
+            answer = dict()
+            answer_object = Answer.objects.get(id=question_object.answers.id)
+            answer['question_id'] = answer_object.question_id
+            answer['answer_text'] = answer_object.answer_text
+            answer['answerer'] = answer_object.answerer.id
+            question['answers'] = answer
+
             question_queryset.append(question)
 
         response.data['questions_list'] = question_queryset
@@ -175,11 +183,13 @@ def answer_question(request):
             return response
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
         question_id = serializer.validated_data['question_id']
         print(Question.objects.get(id=int(question_id)))
         question = Question.objects.get(id=int(question_id))
         question.answers = Answer.objects.order_by('-id').first()
         question.save()
+
         response.data = {'result': 'Success'}
         return response
 

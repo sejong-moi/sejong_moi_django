@@ -20,7 +20,7 @@ urlpatterns = [
     path('del_interested', del_interested),
     path('ask_question', ask_question),
     path('answer_question', answer_question),
-    path('get_qna', get_qna),
+    # path('get_qna', get_qna),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

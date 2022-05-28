@@ -150,6 +150,10 @@ def ask_question(request):
 
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        club = Club.objects.get(name = serializer.validated_data['club_name'])
+        club.questions.add(Question.objects.order_by('-id').first())
+
         response.data = {'result': 'Success'}
         return response
 
@@ -173,11 +177,8 @@ def answer_question(request):
         return response
 
 
-# 질문 답변 출력
-@api_view(['GET'])
-def get_qna(request):
-    if request.method == 'GET':
-        print(request.GET['club'])
-        queryset = set(QnA.objects.filter(club_name=request.GET['club']))
-        serializers = QnASerializer(queryset, many=True)
-        return Response(serializers.data)
+# # 질문 답변 출력
+# @api_view(['GET'])
+# def get_qna(request):
+#     if request.method == 'GET':
+#         request.GET['']

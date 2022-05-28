@@ -35,7 +35,7 @@ class Question(models.Model):
     question_text = models.TextField()
     questioner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questioner')
     answers = models.ForeignKey(Answer, on_delete=models.CASCADE, default='18', related_name='answers')
-    # 18번 질문이 기본 답변
+    # 18번 질문이 기본 답변 (더미노드)
 
     def __str__(self):
         return str(self.id)
@@ -46,13 +46,21 @@ class Club(models.Model):
     name = models.CharField(max_length=20, unique=True)
     introduce = models.TextField()
     introduce_long = models.TextField()
-    club_logo_url = models.URLField()
+    club_logo_url = models.URLField(default='https://w.namu.la/s/90b3132a0a6406eaf98a49e5d7bf9ef7f7c'
+                                            '689036f892663e4c22de357550b7789a027e7dfb76ccf853857f6ec8'
+                                            'fba152d756ba50388c886d35fb69e0740d22e8509ffa55a7374af9aa'
+                                            '4b32083dd149c53c290ca6b057f8074efcc9895adf6a2')
+    club_background_url = models.URLField(default='https://w.namu.la/s/90b3132a0a6406eaf98a49e5d7bf9ef7f7c'
+                                            '689036f892663e4c22de357550b7789a027e7dfb76ccf853857f6ec8'
+                                            'fba152d756ba50388c886d35fb69e0740d22e8509ffa55a7374af9aa'
+                                            '4b32083dd149c53c290ca6b057f8074efcc9895adf6a2')
     category = models.ManyToManyField(Category)
     president_name = models.CharField(max_length=20, blank=True)
     president_phone_number = models.CharField(max_length=20, blank=True)
     member = models.ManyToManyField(User, related_name='member', blank=True)
     like = models.IntegerField()
     questions = models.ManyToManyField(Question, related_name='questions', blank=True)
+    president = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='president', default=1, blank=True)
 
     def __str__(self):
         return self.name

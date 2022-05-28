@@ -202,13 +202,14 @@ def answer_question(request):
 @api_view(['POST'])
 def is_president(request):
     if request.method == "POST":
-        user = request.body['user']
-        president = request.body['president']
-        if user == president:
+        user_id = json.loads(request.body)['user_id']
+        club_name = json.loads(request.body)['club_name']
+        club = Club.objects.get(name=club_name)
+
+        if club.president.id == user_id:
             return Response("True")
         else:
             return Response("False")
-
 
 
 # 사진 등록

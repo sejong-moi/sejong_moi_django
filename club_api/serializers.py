@@ -18,4 +18,3 @@ class AnswerSerializer(serializers.ModelSerializer):
         model = Answer
         fields = ['question_id', 'answer_text', 'answerer']
 
-

@@ -1,8 +1,12 @@
 import json
 
+from django.http import HttpResponse, HttpResponseForbidden
+from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Club, Category, Interesting, Question, Answer
+
+from .form import ImageUploadForm
+from .models import Club, Category, Interesting, Question, Answer, ExampleModel
 from login_api.models import User
 from .serializers import ClubSerializer, QuestionSerializer, AnswerSerializer
 from django.core import serializers
@@ -194,8 +198,17 @@ def answer_question(request):
         return response
 
 
-# # 질문 답변 출력
-# @api_view(['GET'])
-# def get_qna(request):
-#     if request.method == 'GET':
-#         request.GET['']
+# 사진 등록
+# https://kgu0724.tistory.com/117
+def upload_pic(request):
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            m = ExampleModel.objects.get(pk=1)
+            m.model_pic = form.cleaned_data['image']
+            m.save()
+            return HttpResponse('image upload success')
+    return HttpResponseForbidden('allowed only via POST')
+
+
+

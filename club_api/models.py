@@ -73,6 +73,5 @@ class Interesting(models.Model):    # 학번 -> 관심 동아리 목록들
     def __str__(self):
         return self.username
 
-class Club_Img(models.Model):
-	title = models.CharField(max_length=50)
-	photo = models.ImageField(blank=True,upload_to="club_logo")
+class ExampleModel(models.Model):
+    model_pic = models.ImageField(upload_to = 'pic_folder/', default = 'pic_folder/None/no-img.jpg')

@@ -150,7 +150,7 @@ def ask_question(request):
 
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        response.data = serializer.data
+        response.data = {'result': 'Success'}
         return response
 
 # 답변등록
@@ -169,7 +169,7 @@ def answer_question(request):
         question = Question.objects.get(id=int(question_id))
         question.answers = Answer.objects.order_by('-id').first()
         question.save()
-        response.data = serializer.data
+        response.data = {'result': 'Success'}
         return response
 
 

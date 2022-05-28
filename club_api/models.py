@@ -22,7 +22,7 @@ class Category(models.Model):
 
 
 class Answer(models.Model):
-    question_id = models.IntegerField(default=0)
+    question_id = models.IntegerField(default=0) # 0 이면 빈 답변 이라는 뜻
     answer_text = models.TextField(default='아직 답변이 없습니다.')
     answerer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='answerer', default='admin')
 
@@ -35,6 +35,7 @@ class Question(models.Model):
     question_text = models.TextField()
     questioner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questioner')
     answers = models.ForeignKey(Answer, on_delete=models.CASCADE, default='18', related_name='answers')
+    # 18번 질문이 기본 답변
 
     def __str__(self):
         return str(self.id)

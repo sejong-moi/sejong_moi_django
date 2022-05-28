@@ -76,7 +76,6 @@ class UserView(APIView):
         response.data['clubs_managed_by'] = clubs_managed_by
 
         response['Access-Controll-Allow-Origin'] = ['*']
-
         return response
 
 class LogoutView(APIView):

@@ -4,7 +4,7 @@ from .models import Club, Question, Answer
 class ClubSerializer(serializers.ModelSerializer):
     class Meta:
         model = Club
-        fields = ['name', 'introduce', 'club_logo_url', 'category', 'president_name', 'president_phone_number', 'questions']
+        fields = ['name', 'introduce', 'club_logo_url', 'category', 'president_name', 'president_phone_number', 'president', 'questions']
 
 
 class QuestionSerializer(serializers.ModelSerializer):

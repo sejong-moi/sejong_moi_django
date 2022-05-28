@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer
-from club_api.models import Interesting
+from club_api.models import Interesting, Club
 import jwt, datetime
 from .models import User
 from .sj_auth import uis_api
@@ -64,12 +64,16 @@ class UserView(APIView):
         user = User.objects.filter(id = payload['id']).first()
         serializer = UserSerializer(user)
         response = Response(data=serializer.data)
+
         interesting = []
-        print(Interesting.objects.get(username=response.data['username']).clubs.all())
         for i in Interesting.objects.get(username=response.data['username']).clubs.all():
             interesting.append(i.name)
         response.data['interesting'] = interesting
 
+        clubs_managed_by = []
+        for club in Club.objects.filter(president=user.id):
+            clubs_managed_by.append(club.__str__())
+        response.data['clubs_managed_by'] = clubs_managed_by
 
         response['Access-Controll-Allow-Origin'] = ['*']
 

@@ -2,6 +2,7 @@ import json
 
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -198,13 +199,26 @@ def answer_question(request):
         return response
 
 
+@api_view(['POST'])
+def is_president(request):
+    if request.method == "POST":
+        user = request.body['user']
+        president = request.body['president']
+        if user == president:
+            return Response("True")
+        else:
+            return Response("False")
+
+
+
 # 사진 등록
 # https://kgu0724.tistory.com/117
+@csrf_exempt
 def upload_pic(request):
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            m = ExampleModel.objects.get(pk=1)
+            m = ExampleModel.objects.create()
             m.model_pic = form.cleaned_data['image']
             m.save()
             return HttpResponse('image upload success')

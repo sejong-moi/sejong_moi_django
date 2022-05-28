@@ -20,6 +20,7 @@ urlpatterns = [
     path('del_interested', del_interested),
     path('ask_question', ask_question),
     path('answer_question', answer_question),
+    path('is_president', is_president),
     path('upload_pic', upload_pic, name='upload_pic'),
 ]
 

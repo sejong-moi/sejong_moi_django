@@ -7,7 +7,7 @@ from .views import *
 
 urlpatterns = [
     path('club/<str:name>', club, name='club'),
-    path('list', list, name='list'),
+    # path('list', list, name='list'),
     path('list_ranking', list_ranking, name='list_ranking'),
     path('list_show', list_show, name='list_show'),
     path('list_cluture', list_cluture, name='list_cluture'),

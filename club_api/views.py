@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .models import Club, Category, Interesting, Question, Answer
 from login_api.models import User
 from .serializers import ClubSerializer, QuestionSerializer, AnswerSerializer
+from django.core import serializers
 
 
 # Create your views here.
@@ -14,23 +15,30 @@ def club(request, name):
     if request.method == 'GET':
         club = Club.objects.get(name=name)
         serializers = ClubSerializer(club)
-        # interested = serializers.data['interested']
-        # interested_username = []
-        # for id in interested:
-        #     interested_username.append(User.objects.get(id=id).username)
-        # print(interested_username)
-        response = Response(data=serializers.data)
-        # response.data['interested_username'] = interested_username
 
+        response = Response(data=serializers.data)
+
+        question_queryset = []
+        for q in serializers.data['questions']:
+            question = dict()
+            question_object = Question.objects.get(id = q)
+            question['id'] = q
+            question['club_name'] = question_object.club_name
+            question['question_text'] = question_object.question_text
+            question['questioner'] = question_object.questioner.id
+            question['answers'] = question_object.answers.id
+            question_queryset.append(question)
+
+        response.data['questions_list'] = question_queryset
         return response
 
 
-@api_view(['GET'])
-def list(request):
-    if request.method == 'GET':
-        queryset = Club.objects.all()
-        serializers = ClubSerializer(queryset, many=True)
-        return Response(serializers.data)
+# @api_view(['GET'])
+# def list(request):
+#     if request.method == 'GET':
+#         queryset = Club.objects.all()
+#         serializers = ClubSerializer(queryset, many=True)
+#         return Response(serializers.data)
 
 # 랭킹
 @api_view(['GET'])
@@ -142,7 +150,6 @@ def del_interested(request):
 def ask_question(request):
     if request.method == "POST":
         serializer = QuestionSerializer(data=request.data)
-        print(serializer)
         response = Response()
         if not serializer.is_valid():
             response.data = {'result': 'Fail'}

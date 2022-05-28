@@ -41,6 +41,7 @@ class Question(models.Model):
         return str(self.id)
 
 
+
 class Club(models.Model):
     name = models.CharField(max_length=20, unique=True)
     introduce = models.TextField()

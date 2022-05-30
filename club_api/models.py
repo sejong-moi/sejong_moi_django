@@ -1,5 +1,7 @@
 
 from django.db import models
+
+from club_api.utils import set_logo_img_path, set_background_img_path
 from login_api.models import User
 
 # Create your models here.
@@ -73,5 +75,15 @@ class Interesting(models.Model):    # 학번 -> 관심 동아리 목록들
     def __str__(self):
         return self.username
 
-class ExampleModel(models.Model):
-    model_pic = models.ImageField(upload_to = 'pic_folder/', default = 'pic_folder/None/no-img.jpg')
+
+class LogoImage(models.Model):
+    club_name = models.CharField(max_length=20)
+    picture = models.ImageField(upload_to = set_logo_img_path, default ='pic_folder/no-img.jpg')
+
+    def __str__(self):
+        return str(self.picture)
+
+
+class LogoImage(models.Model):
+    club_name = models.CharField(max_length=20)
+    picture = models.ImageField(upload_to = set_background_img_path, default ='pic_folder/no-img.jpg')

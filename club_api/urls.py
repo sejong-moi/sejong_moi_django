@@ -21,7 +21,7 @@ urlpatterns = [
     path('ask_question', ask_question),
     path('answer_question', answer_question),
     path('is_president', is_president),
-    path('upload_pic', upload_pic, name='upload_pic'),
+    path('upload_logo', upload_logo, name='upload_logo'),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

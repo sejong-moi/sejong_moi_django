@@ -6,8 +6,9 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from sejong_moi_django import settings
 from .form import ImageUploadForm
-from .models import Club, Category, Interesting, Question, Answer, ExampleModel
+from .models import Club, Category, Interesting, Question, Answer, LogoImage
 from login_api.models import User
 from .serializers import ClubSerializer, QuestionSerializer, AnswerSerializer
 from django.core import serializers
@@ -212,17 +213,17 @@ def is_president(request):
             return Response("False")
 
 
-# 사진 등록
-# https://kgu0724.tistory.com/117
+# 로고 사진 등록
 @csrf_exempt
-def upload_pic(request):
+def upload_logo(request):
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            m = ExampleModel.objects.create()
-            m.model_pic = form.cleaned_data['image']
-            m.save()
-            return HttpResponse('image upload success')
+            logo_image = LogoImage.objects.create()
+            logo_image.picture = form.cleaned_data['image']
+            logo_image.save()
+            print(logo_image.picture)
+            return HttpResponse('http://localhost:8000/media/' + str(logo_image.picture))
     return HttpResponseForbidden('allowed only via POST')
 
 

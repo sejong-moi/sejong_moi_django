@@ -51,16 +51,16 @@ class Club(models.Model):
     club_logo_url = models.URLField(default='https://w.namu.la/s/90b3132a0a6406eaf98a49e5d7bf9ef7f7c'
                                             '689036f892663e4c22de357550b7789a027e7dfb76ccf853857f6ec8'
                                             'fba152d756ba50388c886d35fb69e0740d22e8509ffa55a7374af9aa'
-                                            '4b32083dd149c53c290ca6b057f8074efcc9895adf6a2')
+                                            '4b32083dd149c53c290ca6b057f8074efcc9895adf6a2', blank=True)
     club_background_url = models.URLField(default='https://w.namu.la/s/90b3132a0a6406eaf98a49e5d7bf9ef7f7c'
                                             '689036f892663e4c22de357550b7789a027e7dfb76ccf853857f6ec8'
                                             'fba152d756ba50388c886d35fb69e0740d22e8509ffa55a7374af9aa'
-                                            '4b32083dd149c53c290ca6b057f8074efcc9895adf6a2')
+                                            '4b32083dd149c53c290ca6b057f8074efcc9895adf6a2', blank=True)
     category = models.ManyToManyField(Category)
     president_name = models.CharField(max_length=20, blank=True)
     president_phone_number = models.CharField(max_length=20, blank=True)
     member = models.ManyToManyField(User, related_name='member', blank=True)
-    like = models.IntegerField()
+    like = models.IntegerField(default=0)
     questions = models.ManyToManyField(Question, related_name='questions', blank=True)
     president = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='president', default=1, blank=True)
 

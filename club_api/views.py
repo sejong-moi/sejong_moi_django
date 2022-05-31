@@ -10,7 +10,7 @@ from sejong_moi_django import settings
 from .form import ImageUploadForm
 from .models import Club, Category, Interesting, Question, Answer, LogoImage
 from login_api.models import User
-from .serializers import ClubSerializer, QuestionSerializer, AnswerSerializer
+from .serializers import ClubSerializer, QuestionSerializer, AnswerSerializer, ClubPostSerializer
 from django.core import serializers
 
 
@@ -119,13 +119,24 @@ def list_academic(request):
 @api_view(['POST'])
 def register_club(request):
     if request.method == 'POST':
-        serializer = ClubSerializer(data=request.data)
+        print(json.loads(request.body)) #
+        print(json.loads(request.body)['category_kor']) #
+        print(json.loads(request.body)['president_id']) #
+        # serializer = ClubSerializer(data=request.data)
+        serializer = ClubPostSerializer(data=request.data)
         response = Response()
         if not serializer.is_valid():
+            print(serializer.data)
             response.data = {'result': 'Fail'}
             return response
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        club = Club.objects.order_by('-id').first()
+        club.president = User.objects.get(username=json.loads(request.body)['president_id'])
+        category = Category.objects.get(category=json.loads(request.body)['category_kor'])
+
+        club.category.add(category)
+        club.save()
         response.data = serializer.data
         return response
 
@@ -133,7 +144,6 @@ def register_club(request):
 @api_view(['POST'])
 def add_interested(request):
     if request.method == 'POST':
-        print(json.loads(request.body)) #
         username = json.loads(request.body)['username']
         club_name = json.loads(request.body)['club_name']
         interesting = Interesting.objects.get(username=username)
@@ -203,6 +213,7 @@ def answer_question(request):
 @api_view(['POST'])
 def is_president(request):
     if request.method == "POST":
+        print(request.body)
         user_id = json.loads(request.body)['user_id']
         club_name = json.loads(request.body)['club_name']
         club = Club.objects.get(name=club_name)
@@ -225,6 +236,4 @@ def upload_logo(request):
             print(logo_image.picture)
             return HttpResponse('http://localhost:8000/media/' + str(logo_image.picture))
     return HttpResponseForbidden('allowed only via POST')
-
-
 

@@ -71,6 +71,9 @@ def club(request, name):
 # def list(request):
 #     if request.method == 'GET':
 #         queryset = Club.objects.all()
+#         for q in queryset:
+#             q.recruit = '2022/05/01'
+#             q.save()
 #         serializers = ClubSerializer(queryset, many=True)
 #         return Response(serializers.data)
 

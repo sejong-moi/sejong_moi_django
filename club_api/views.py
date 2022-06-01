@@ -67,15 +67,18 @@ def club(request, name):
         return response
 
 
-# @api_view(['GET'])
-# def list(request):
-#     if request.method == 'GET':
-#         queryset = Club.objects.all()
-#         for q in queryset:
-#             q.recruit = '2022/05/01'
-#             q.save()
-#         serializers = ClubSerializer(queryset, many=True)
-#         return Response(serializers.data)
+@api_view(['GET'])
+def list(request):
+    if request.method == 'GET':
+        queryset = Club.objects.all()
+        for q in queryset:
+            if q.name == 'RUSH':
+                continue
+
+            q.introduce_long = '세종대학교의 중앙동아리 입니다.'
+            q.save()
+        serializers = ClubSerializer(queryset, many=True)
+        return Response(serializers.data)
 
 # 랭킹
 @api_view(['GET'])
@@ -191,6 +194,37 @@ def register_club(request):
         return response
 
 
+# # 동아리 수정
+# @api_view(['POST'])
+# def update_club(request):
+#     if request.method == 'POST':
+#         print(json.loads(request.body)) #
+#         # print(json.loads(request.body)['category_kor']) #
+#         # print(json.loads(request.body)['president_id']) #
+#         serializer = ClubPostSerializer(data=request.data)
+#         response = Response()
+#         if not serializer.is_valid():
+#             print(serializer.data)
+#             response.data = {'result': 'Fail'}
+#             return response
+#         serializer.is_valid(raise_exception=True)
+#         # serializer.save()
+#         # club = Club.objects.order_by('-id').first()
+#         club = Club.objects.get(name=json.loads(request.body)['name'])
+#         club.introduce = serializer.validated_data['introduce']
+#         club.introduce_long = serializer.validated_data['introduce_long']
+#         club.club_background_url = serializer.validated_data['club_background_url']
+#         club.club_logo_url = serializer.validated_data['club_logo_url']
+#         club.president_name = serializer.validated_data['president_name']
+#         club.president_phone_number = serializer.validated_data['president_phone_number']
+#         club.recruit = serializer.validated_data['recruit']
+#         club.president = User.objects.get(username=json.loads(request.body)['president_id'])
+#         category = Category.objects.get(category=json.loads(request.body)['category_kor'])
+#         club.category.add(category)
+#         club.save()
+#
+#         response.data = serializer.data
+#         return response
 
 # 동아리 수정
 @api_view(['POST'])
@@ -199,29 +233,28 @@ def update_club(request):
         print(json.loads(request.body)) #
         # print(json.loads(request.body)['category_kor']) #
         # print(json.loads(request.body)['president_id']) #
-        serializer = ClubPostSerializer(data=request.data)
+        # serializer = ClubPostSerializer(data=request.data)
         response = Response()
-        if not serializer.is_valid():
-            print(serializer.data)
-            response.data = {'result': 'Fail'}
-            return response
-        serializer.is_valid(raise_exception=True)
+        # if not serializer.is_valid():
+        #     print(serializer.data)
+        #     response.data = {'result': 'Fail'}
+        #     return response
+        # serializer.is_valid(raise_exception=True)
         # serializer.save()
         # club = Club.objects.order_by('-id').first()
         club = Club.objects.get(name=json.loads(request.body)['name'])
-        club.introduce = serializer.validated_data['introduce']
-        club.introduce_long = serializer.validated_data['introduce_long']
-        club.club_background_url = serializer.validated_data['club_background_url']
-        club.club_logo_url = serializer.validated_data['club_logo_url']
-        club.president_name = serializer.validated_data['president_name']
-        club.president_phone_number = serializer.validated_data['president_phone_number']
-        club.recruit = serializer.validated_data['recruit']
+        club.introduce = json.loads(request.body)['introduce']
+        club.introduce_long = json.loads(request.body)['introduce_long']
+        club.club_background_url = json.loads(request.body)['club_background_url']
+        club.club_logo_url = json.loads(request.body)['club_logo_url']
+        club.president_name = json.loads(request.body)['president_name']
+        club.president_phone_number = json.loads(request.body)['president_phone_number']
+        club.recruit = json.loads(request.body)['recruit']
         club.president = User.objects.get(username=json.loads(request.body)['president_id'])
         category = Category.objects.get(category=json.loads(request.body)['category_kor'])
         club.category.add(category)
         club.save()
 
-        response.data = serializer.data
         return response
 
 

@@ -62,7 +62,7 @@ def club(request, name):
 
         response.data['is_recruiting'] = is_recruiting
         response.data['president_id'] = club.president.__str__()
-        response.data['category_kor'] = Category.objects.get(id = club.category[0])
+        response.data['category_kor'] = club.category.first().__str__()
 
         return response
 

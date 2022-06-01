@@ -10,7 +10,7 @@ class ClubSerializer(serializers.ModelSerializer):
 class ClubPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Club
-        fields = ['name', 'introduce', 'club_background_url', 'club_logo_url', 'president_name', 'president_phone_number', 'recruit']
+        fields = ['name', 'introduce', 'introduce_long', 'club_background_url', 'club_logo_url', 'president_name', 'president_phone_number', 'recruit']
 
 
 class QuestionSerializer(serializers.ModelSerializer):

@@ -62,6 +62,7 @@ def club(request, name):
 
         response.data['is_recruiting'] = is_recruiting
         response.data['president_id'] = club.president.__str__()
+        response.data['category_kor'] = Category.objects.get(id = club.category[0])
 
         return response
 

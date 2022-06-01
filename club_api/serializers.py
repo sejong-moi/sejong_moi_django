@@ -4,13 +4,13 @@ from .models import Club, Question, Answer
 class ClubSerializer(serializers.ModelSerializer):
     class Meta:
         model = Club
-        fields = ['name', 'introduce', 'club_background_url', 'club_logo_url', 'category', 'president_name', 'president_phone_number', 'president', 'questions']
+        fields = ['name', 'introduce', 'introduce_long', 'club_background_url', 'club_logo_url', 'category', 'president_name', 'president_phone_number', 'president', 'questions']
 
 
 class ClubPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Club
-        fields = ['name', 'introduce', 'club_background_url', 'club_logo_url', 'president_name', 'president_phone_number']
+        fields = ['name', 'introduce', 'club_background_url', 'club_logo_url', 'president_name', 'president_phone_number', 'recruit']
 
 
 class QuestionSerializer(serializers.ModelSerializer):

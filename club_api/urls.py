@@ -9,6 +9,7 @@ urlpatterns = [
     path('club/<str:name>', club, name='club'),
     # path('list', list, name='list'),
     path('list_ranking', list_ranking, name='list_ranking'),
+    path('list_recruiting', list_recruiting, name='list_recruiting'),
     path('list_show', list_show, name='list_show'),
     path('list_cluture', list_cluture, name='list_cluture'),
     path('list_voluteer', list_voluteer, name='list_voluteer'),

@@ -63,6 +63,7 @@ class Club(models.Model):
     like = models.IntegerField(default=0)
     questions = models.ManyToManyField(Question, related_name='questions', blank=True)
     president = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='president', default=1, blank=True)
+    recruit = models.CharField(max_length=20)
 
     def __str__(self):
         return self.name
@@ -87,3 +88,22 @@ class LogoImage(models.Model):
 class LogoImage(models.Model):
     club_name = models.CharField(max_length=20)
     picture = models.ImageField(upload_to = set_background_img_path, default ='pic_folder/no-img.jpg')
+
+#
+# class interviewQuestion(models.Model):  # 각 질문들
+#     application_form_id = models.IntegerField()
+#     question_text = models.TextField()
+#     question_option = models.IntegerField()
+#     question_option_list = models.TextField(blank=True)
+#
+#
+# class Application(models.Model):        # 각 사용자의 응답
+#     application_form_id = models.IntegerField()
+#     user = models.ForeignKey(User, related_name="user")
+#
+#
+# class ApplicationForm(models.Model):    # 회장이 만든 질문지
+#     interview_questions = models.ManyToManyField(interviewQuestion, related_name='interview_questions')
+#     applications = models.ManyToManyField(Application, related_name='applications')
+#     deadline = models.DateTimeField(blank=True)
+

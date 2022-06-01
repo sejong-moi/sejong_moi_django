@@ -1,4 +1,6 @@
 import json
+import datetime
+from dateutil.parser import parse
 
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render
@@ -44,6 +46,16 @@ def club(request, name):
             question_queryset.append(question)
 
         response.data['questions_list'] = question_queryset
+
+        is_recruiting = '모집중 아님'
+        now = datetime.datetime.now()
+        recruit = parse(club.recruit)
+        if now <= recruit:
+            is_recruiting = '모집중'
+        response.data['is_recruiting'] = is_recruiting
+
+        print(is_recruiting)
+
         return response
 
 
@@ -65,6 +77,24 @@ def list_ranking(request):
         for i in range(len(response.data)):
             response.data[i]['category_eng'] = category[response.data[i]['category'][0]]
             response.data[i]['category_kor'] = str(Category.objects.get(id=response.data[i]['category'][0]))
+        return response
+
+# 모집중 동아리 리스트
+@api_view(['GET'])
+def list_recruiting(request):
+    if request.method == 'GET':
+        recruiting = []
+        queryset = Club.objects.all()
+        for q in queryset:
+            recruit = parse(q.recruit)
+            now = datetime.datetime.now()
+            if now <= recruit:
+                recruiting.append(q)
+                if len(recruiting) >= 5:
+                    break
+
+        serializers = ClubSerializer(recruiting, many=True)
+        response = Response(data=serializers.data)
         return response
 
 # 공연
@@ -120,9 +150,8 @@ def list_academic(request):
 def register_club(request):
     if request.method == 'POST':
         print(json.loads(request.body)) #
-        print(json.loads(request.body)['category_kor']) #
-        print(json.loads(request.body)['president_id']) #
-        # serializer = ClubSerializer(data=request.data)
+        # print(json.loads(request.body)['category_kor']) #
+        # print(json.loads(request.body)['president_id']) #
         serializer = ClubPostSerializer(data=request.data)
         response = Response()
         if not serializer.is_valid():

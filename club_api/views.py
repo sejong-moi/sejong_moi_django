@@ -191,6 +191,41 @@ def register_club(request):
         return response
 
 
+
+# 동아리 수정
+@api_view(['POST'])
+def register_club(request):
+    if request.method == 'POST':
+        print(json.loads(request.body)) #
+        # print(json.loads(request.body)['category_kor']) #
+        # print(json.loads(request.body)['president_id']) #
+        serializer = ClubPostSerializer(data=request.data)
+        response = Response()
+        if not serializer.is_valid():
+            print(serializer.data)
+            response.data = {'result': 'Fail'}
+            return response
+        serializer.is_valid(raise_exception=True)
+        # serializer.save()
+        # club = Club.objects.order_by('-id').first()
+        club = Club.objects.get(name=json.loads(request.body)['name'])
+        club.introduce = serializer.validated_data['introduce']
+        club.introduce_long = serializer.validated_data['introduce_long']
+        club.club_background_url = serializer.validated_data['club_background_url']
+        club.club_logo_url = serializer.validated_data['club_logo_url']
+        club.president_name = serializer.validated_data['president_name']
+        club.president_phone_number = serializer.validated_data['president_phone_number']
+        club.recruit = serializer.validated_data['recruit']
+        club.president = User.objects.get(username=json.loads(request.body)['president_id'])
+        category = Category.objects.get(category=json.loads(request.body)['category_kor'])
+        club.category.add(category)
+        club.save()
+
+        response.data = serializer.data
+        return response
+
+
+
 # 관심 동아리 추가
 @api_view(['POST'])
 def add_interested(request):

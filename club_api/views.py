@@ -180,12 +180,11 @@ def register_club(request):
         club = Club.objects.order_by('-id').first()
         club.president = User.objects.get(username=json.loads(request.body)['president_id'])
         category = Category.objects.get(category=json.loads(request.body)['category_kor'])
-
         club.category.add(category)
         club.save()
+
         response.data = serializer.data
         return response
-
 # 관심 동아리 추가
 @api_view(['POST'])
 def add_interested(request):

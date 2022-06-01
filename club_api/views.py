@@ -194,7 +194,7 @@ def register_club(request):
 
 # 동아리 수정
 @api_view(['POST'])
-def register_club(request):
+def update_club(request):
     if request.method == 'POST':
         print(json.loads(request.body)) #
         # print(json.loads(request.body)['category_kor']) #

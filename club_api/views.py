@@ -47,16 +47,18 @@ def club(request, name):
 
         response.data['questions_list'] = question_queryset
 
-        is_recruiting = '모집중 아님'
+        is_recruiting = '모집 마감'
         if club.recruit == '상시 모집':
-            is_recruiting = '모집중'
+            is_recruiting = '모집 중'
+        elif club.recruit == '모집 마감':
+            is_recruiting = '모집 마감'
         else:
             now = datetime.datetime.now()
             recruit_date = parse(club.recruit)
             recruit_time = datetime.time(23,59,59)
             recruit = datetime.datetime.combine(recruit_date, recruit_time)
             if now <= recruit:
-                is_recruiting = '모집중'
+                is_recruiting = '모집 중'
 
         print(is_recruiting)
         response.data['is_recruiting'] = is_recruiting
@@ -94,6 +96,8 @@ def list_recruiting(request):
         for q in queryset:
             if q.recruit == '상시 모집':
                 recruiting.append(q)
+                continue
+            elif q.recruit == '모집 마감':
                 continue
             recruit_date = parse(q.recruit)
             recruit_time = datetime.time(23,59,59)

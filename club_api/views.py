@@ -60,9 +60,8 @@ def club(request, name):
             if now <= recruit:
                 is_recruiting = '모집 중'
 
-        print(is_recruiting)
         response.data['is_recruiting'] = is_recruiting
-
+        response.data['president_id'] = club.president.__str__()
 
         return response
 

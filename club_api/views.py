@@ -48,13 +48,19 @@ def club(request, name):
         response.data['questions_list'] = question_queryset
 
         is_recruiting = '모집중 아님'
-        now = datetime.datetime.now()
-        recruit = parse(club.recruit)
-        if now <= recruit:
+        if club.recruit == '상시 모집':
             is_recruiting = '모집중'
-        response.data['is_recruiting'] = is_recruiting
+        else:
+            now = datetime.datetime.now()
+            recruit_date = parse(club.recruit)
+            recruit_time = datetime.time(23,59,59)
+            recruit = datetime.datetime.combine(recruit_date, recruit_time)
+            if now <= recruit:
+                is_recruiting = '모집중'
 
         print(is_recruiting)
+        response.data['is_recruiting'] = is_recruiting
+
 
         return response
 
@@ -86,13 +92,20 @@ def list_recruiting(request):
         recruiting = []
         queryset = Club.objects.all()
         for q in queryset:
-            recruit = parse(q.recruit)
+            if q.recruit == '상시 모집':
+                recruiting.append(q)
+                continue
+            recruit_date = parse(q.recruit)
+            recruit_time = datetime.time(23,59,59)
+            recruit = datetime.datetime.combine(recruit_date, recruit_time)
             now = datetime.datetime.now()
             if now <= recruit:
                 recruiting.append(q)
-                if len(recruiting) >= 5:
-                    break
 
+            if len(recruiting) >= 5:
+                break
+
+        recruiting.sort(key=lambda q: q.recruit)
         serializers = ClubSerializer(recruiting, many=True)
         response = Response(data=serializers.data)
         return response

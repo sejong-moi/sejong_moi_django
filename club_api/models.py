@@ -64,6 +64,7 @@ class Club(models.Model):
     questions = models.ManyToManyField(Question, related_name='questions', blank=True)
     president = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='president', default=1, blank=True)
     recruit = models.CharField(max_length=20)
+    apply_link = models.URLField(blank=True)
 
     def __str__(self):
         return self.name

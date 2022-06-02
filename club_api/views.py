@@ -61,6 +61,7 @@ def club(request, name):
                 is_recruiting = '모집 중'
 
         response.data['is_recruiting'] = is_recruiting
+        response.data['apply_link'] = club.apply_link
         response.data['president_id'] = club.president.__str__()
         response.data['category_kor'] = club.category.first().__str__()
 
@@ -250,6 +251,7 @@ def update_club(request):
         club.president_name = json.loads(request.body)['president_name']
         club.president_phone_number = json.loads(request.body)['president_phone_number']
         club.recruit = json.loads(request.body)['recruit']
+        club.apply_link = json.loads(request.body)['apply_link']
         club.president = User.objects.get(username=json.loads(request.body)['president_id'])
         category = Category.objects.get(category=json.loads(request.body)['category_kor'])
         club.category.add(category)

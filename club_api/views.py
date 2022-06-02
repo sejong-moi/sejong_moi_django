@@ -254,6 +254,7 @@ def update_club(request):
         club.apply_link = json.loads(request.body)['apply_link']
         club.president = User.objects.get(username=json.loads(request.body)['president_id'])
         category = Category.objects.get(category=json.loads(request.body)['category_kor'])
+        club.category.clear()
         club.category.add(category)
         club.save()
 

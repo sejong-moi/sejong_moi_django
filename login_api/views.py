@@ -14,8 +14,7 @@ class LoginView(APIView):
     def post(self, request):
         username = request.data['username']
         password = request.data['password']
-
-        user = User.objects.filter(username=username).first()
+        user = User.objects.get(username=username)
 
         if user is None: # DB에 아이디가 없는경우
             user_info = uis_api(username, password) # 세종대 학사 홈페이지에 로그인시킴
@@ -77,6 +76,7 @@ class UserView(APIView):
 
         response['Access-Controll-Allow-Origin'] = ['*']
         return response
+
 
 class LogoutView(APIView):
     def post(self, request):
